@@ -1,545 +1,601 @@
-import React, { useState } from 'react';
-import { Brain, Lightbulb, Target, Wrench, Code, FileCheck, ChevronLeft, ChevronRight, HelpCircle, AlertCircle, Smile, Database, Calculator, RefreshCw, UploadCloud } from 'lucide-react';
-
-const AiProjectMentor = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState({
-    dreams: '',
-    selectedIdea: '',
-    problem: '',
-    datasetPlan: '',
-    tmLink: '',
-    reflection: '',
-    pythonNotes: ''
-  });
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const steps = [
-    {
-      title: "שלב החלומות",
-      icon: <Lightbulb className="w-8 h-8 text-yellow-500" />,
-      content: (
-        <div className="space-y-4">
-          <p className="text-gray-700 text-lg">
-            ברוכים הבאים לפרויקט הגמר! השלב הראשון הוא פשוט לחלום. 
-            חשבו על רעיונות לבעיות שניתן לפתור בעזרת בינה מלאכותית. אל תפחדו להציע גם "חלומות" גדולים!
-          </p>
-          
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            <h4 className="font-bold text-gray-800 mb-3 text-lg">נקודות חשובות לחשיבה על רעיון (מתוך המקורות):</h4>
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-right border-collapse">
-                <thead>
-                  <tr className="bg-indigo-50">
-                    <th className="border border-gray-200 p-2 font-bold text-indigo-900 w-1/4">קריטריון</th>
-                    <th className="border border-gray-200 p-2 font-bold text-indigo-900 w-3/4">למה חשוב לשים לב?</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-gray-200 p-2 font-semibold text-gray-800 bg-gray-50">סוג הנתונים</td>
-                    <td className="border border-gray-200 p-2 text-gray-700">האם ניתן לזהות את הבעיה בעזרת <strong>תמונה</strong>, <strong>קול</strong> או <strong>תנוחה</strong>? (אלו היכולות שניתן לממש ב-Teachable Machine).</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-200 p-2 font-semibold text-gray-800 bg-gray-50">זמינות הנתונים (Data)</td>
-                    <td className="border border-gray-200 p-2 text-gray-700">האם נוכל לאסוף או לצלם בעצמנו מספיק דוגמאות (לפחות 50-100 לכל מצב) כדי לאמן את המודל בהצלחה?</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-200 p-2 font-semibold text-gray-800 bg-gray-50">מענה לבעיה</td>
-                    <td className="border border-gray-200 p-2 text-gray-700">האם הרעיון שלנו פותר בעיה ספציפית ועוזר למישהו? (למשל: שומר על הסביבה, מסייע לבעלי מוגבלויות, מונע סכנה).</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-200 p-2 font-semibold text-gray-800 bg-gray-50">היתכנות ומגוון</td>
-                    <td className="border border-gray-200 p-2 text-gray-700">האם הבעיה ממוקדת מספיק שנוכל ללמד מחשב להבחין בה בתנאים מציאותיים (תאורה שונה, רקעים שונים, משתמשים שונים)?</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div className="mt-6">
-             <p className="text-gray-700 font-bold mb-2">יש לכם רעיונות? מלאו את הטופס הבא כדי שהמורה יוכל לראות ולשמור אותם:</p>
-             <div className="w-full h-80 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
-                
-                {/* Instructions for the Teacher (Visible only when no iframe is provided) */}
-                <div className="absolute inset-0 flex items-center justify-center flex-col p-6 text-center z-10 pointer-events-none">
-                    <FileCheck className="w-12 h-12 text-indigo-300 mb-3" />
-                    <p className="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס ה-Google Forms שלך</p>
-                    <p className="text-sm text-gray-500 mt-2 max-w-md">
-                      כדי לאסוף את רעיונות התלמידים ל-Drive שלך, החלף את ה-iframe בקוד בשורת ההטמעה (Embed) של הטופס שיצרת.
-                    </p>
-                </div>
-
-                {/* Placeholder iframe - Replace 'src' with your actual Google Form Embed Link */}
-                <iframe 
-                  src="about:blank" 
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  marginHeight="0" 
-                  marginWidth="0"
-                  className="absolute inset-0 z-0 bg-transparent"
-                  title="טופס הגשת רעיונות"
-                >טוען...</iframe>
-             </div>
-          </div>
-
-          <div className="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3 mt-6">
-            <HelpCircle className="w-6 h-6 text-blue-500 flex-shrink-0 mt-1" />
-            <div>
-              <h4 className="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
-              <p className="text-blue-700">מהו הדבר שהכי מפריע לך ביומיום? איזו בעיה קטנה היית שמח שמישהו (או משהו) יפתור עבורך?</p>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "בחירה ודיוק",
-      icon: <Target className="w-8 h-8 text-red-500" />,
-      content: (
-        <div className="space-y-4">
-          <p className="text-gray-700 text-lg">
-            מתוך כל החלומות, בואו נבחר אחד שנוכל ליישם בעזרת בינה מלאכותית (סיווג תמונות, קול או תנוחה).
-          </p>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-gray-700 font-bold mb-2">הרעיון הנבחר:</label>
-              <input
-                type="text"
-                className="w-full p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400"
-                placeholder="למשל: מערכת שמזהה סוגי שטרות כדי לעזור לאדם עיוור"
-                value={formData.selectedIdea}
-                onChange={(e) => handleInputChange('selectedIdea', e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-bold mb-2">איזו בעיה ספציפית זה פותר?</label>
-              <textarea
-                className="w-full p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400"
-                rows="3"
-                placeholder="תארו את הבעיה. למשל: אנשים עיוורים מתקשים להבדיל בין שטרות כסף שונים בזמן תשלום."
-                value={formData.problem}
-                onChange={(e) => handleInputChange('problem', e.target.value)}
-              ></textarea>
-            </div>
-          </div>
-          <div className="bg-green-50 border-r-4 border-green-500 p-4 rounded-lg mt-4">
-            <h4 className="font-bold text-green-800 mb-2">הדוגמה של ולרי:</h4>
-            <p className="text-green-700">ולרי בחר להתמקד בבעיה של אנשים עיוורים שמתקשים לזהות שטרות. הוא שם לב שהשטרות דומים מאוד במגע, ולכן המטרה שלו הייתה לפתח מערכת שתזהה את השטר באמצעות מצלמה ותקריא את הסכום בקול. בעיה ממוקדת שניתנת לפתרון על ידי זיהוי תמונות!</p>
-          </div>
-
-          <div className="mt-6 mb-4">
-             <p className="text-gray-700 font-bold mb-2">סגורים על הרעיון והבעיה? מלאו את הטופס הבא כדי לאשר אותם מול המורה:</p>
-             <div className="w-full h-80 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
-                
-                {/* Instructions for the Teacher (Visible only when no iframe is provided) */}
-                <div className="absolute inset-0 flex items-center justify-center flex-col p-6 text-center z-10 pointer-events-none">
-                    <FileCheck className="w-12 h-12 text-indigo-300 mb-3" />
-                    <p className="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס "הגדרת הבעיה"</p>
-                    <p className="text-sm text-gray-500 mt-2 max-w-md">
-                      כדי לאשר את הרעיונות של התלמידים לפני המעבר לשלב הבא, החלף את ה-iframe בקוד בשורת ההטמעה של הטופס שיצרת.
-                    </p>
-                </div>
-
-                {/* Placeholder iframe - Replace 'src' with your actual Google Form Embed Link */}
-                <iframe 
-                  src="about:blank" 
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  marginHeight="0" 
-                  marginWidth="0"
-                  className="absolute inset-0 z-0 bg-transparent"
-                  title="טופס הגדרת הבעיה"
-                >טוען...</iframe>
-             </div>
-          </div>
-
-          <div className="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3">
-            <HelpCircle className="w-6 h-6 text-blue-500 flex-shrink-0 mt-1" />
-            <div>
-              <h4 className="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
-              <p className="text-blue-700">מי בדיוק הולך להשתמש במערכת שלך? איך המערכת "תראה" או "תשמע" את הבעיה כדי לפתור אותה?</p>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "איסוף נתונים ומניעת הטיות",
-      icon: <Database className="w-8 h-8 text-orange-500" />,
-      content: (
-        <div className="space-y-4">
-          <p className="text-gray-700 text-lg">
-            כדי שהמודל שלנו יהיה חכם, הוא צריך ללמוד מהרבה דוגמאות. אוסף הדוגמאות הזה נקרא <strong>Dataset</strong> (מאגר נתונים). בחירה לא נכונה של נתונים יכולה "לקלקל" את הבינה המלאכותית!
-          </p>
-
-          <div className="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg mt-4 mb-4">
-            <h4 className="font-bold text-blue-800 mb-2">💡 חוק ברזל: פיצול נתונים (80/20)</h4>
-            <p className="text-blue-700">
-              אל תשתמשו בכל הנתונים שלכם כדי לאמן את המודל! עליכם <strong>לשמור 20% מהתמונות או ההקלטות בצד</strong> (בתיקייה נפרדת או פשוט לא להעלות אותם עדיין). אלו יהיו "נתוני הבדיקה" שלנו מאוחר יותר, שיוכיחו שהמודל לא סתם "שינן" בעל פה את התשובות, אלא באמת למד לזהות תבניות חדשות.
-            </p>
-          </div>
-          
-          <div className="bg-orange-50 border-r-4 border-orange-500 p-4 rounded-lg mt-4 mb-4">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertCircle className="text-orange-600 w-5 h-5" />
-              <h4 className="font-bold text-orange-800">זהירות, הטיות (Bias)!</h4>
-            </div>
-            <p className="text-orange-700 mb-2">
-              אם נלמד את המחשב לזהות שטר של 50 שקלים רק כשהוא <strong>חדש, חלק ומצולם באור יום</strong>, מה יקרה כשעיוור ינסה לזהות שטר <strong>מקומט בתוך חדר חשוך</strong>? המודל יטעה! 
-              הטיה קורית כשהנתונים שלנו לא מייצגים את כל המציאות. עלינו לגוון ולכלול מצבים שונים כדי שהמודל יתאים לכולם.
-            </p>
-          </div>
-
-          <div>
-             <label className="block text-gray-700 font-bold mb-2">איך תדאגו שה-Dataset שלכם יהיה מגוון וללא הטיות?</label>
-             <textarea
-              className="w-full p-4 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400"
-              rows="3"
-              placeholder="למשל: אני אצלם את השטרות ב-3 חדרים שונים, אבקש מעוד חברים להחזיק אותם, ואצלם גם שטרות מקומטים..."
-              value={formData.datasetPlan}
-              onChange={(e) => handleInputChange('datasetPlan', e.target.value)}
-            ></textarea>
-          </div>
-
-          <div className="mt-6 mb-4">
-             <p className="text-gray-700 font-bold mb-2">מלאו את טופס הרפלקציה לגבי מאגר הנתונים שלכם לפני שאתם מתחילים לצלם:</p>
-             <div className="w-full h-80 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
-                <div className="absolute inset-0 flex items-center justify-center flex-col p-6 text-center z-10 pointer-events-none">
-                    <FileCheck className="w-12 h-12 text-indigo-300 mb-3" />
-                    <p className="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס "תכנון ה-Dataset"</p>
-                    <p className="text-sm text-gray-500 mt-2 max-w-md">
-                      החלף את ה-iframe בקישור לטופס שבו התלמידים מפרטים אילו תמונות הם הולכים לאסוף ומדוע.
-                    </p>
-                </div>
-                <iframe 
-                  src="about:blank" 
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  marginHeight="0" 
-                  marginWidth="0"
-                  className="absolute inset-0 z-0 bg-transparent"
-                  title="טופס תכנון הנתונים"
-                >טוען...</iframe>
-             </div>
-          </div>
-
-          <div className="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3">
-            <HelpCircle className="w-6 h-6 text-blue-500 flex-shrink-0 mt-1" />
-            <div>
-              <h4 className="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
-              <p className="text-blue-700">תארו לעצמכם מישהו אחר (בגיל אחר, עם צבע עור שונה, או בסביבה שונה) שמשתמש במערכת. האם הנתונים שאספתם יעבדו גם עבורו?</p>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "אימון מודל AI",
-      icon: <Brain className="w-8 h-8 text-purple-500" />,
-      content: (
-        <div className="space-y-4">
-          <p className="text-gray-700 text-lg">
-            עכשיו עוברים לפרקטיקה! נשתמש ב- <strong>Teachable Machine</strong> של Google כדי ללמד את המחשב לזהות את מה שאנחנו צריכים.
-          </p>
-          <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
-            <li>פתחו מחלקה (Class) עבור כל מצב (למשל: שטר 20, שטר 50, שטר 100, "רקע/ידיים ריקות").</li>
-            <li>העלו את <strong>80%</strong> מהתמונות/הקלטות שאספתם לכל מחלקה (זכרו את 20% ששמרנו לבדיקה בצד!).</li>
-            <li>אמנו את המודל (Train).</li>
-          </ul>
-          <div className="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3 mt-4">
-            <HelpCircle className="w-6 h-6 text-blue-500 flex-shrink-0 mt-1" />
-            <div>
-              <h4 className="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
-              <p className="text-blue-700">בזמן שהמודל מתאמן, מה בעצם קורה שם מאחורי הקלעים? איך לדעתכם המחשב לומד להבדיל בין התמונות?</p>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "בדיקת המודל (חישוב דיוק)",
-      icon: <Calculator className="w-8 h-8 text-teal-500" />,
-      content: (
-        <div className="space-y-4">
-          <p className="text-gray-700 text-lg">
-            הגיע רגע האמת! האם המודל שלכם באמת חכם או שהוא רק עושה כאילו? עכשיו נשתמש ב-20% הנתונים ששמרנו בצד כדי למדוד את ה<strong>דיוק (Accuracy)</strong> שלו.
-          </p>
-          
-          <div className="bg-teal-50 border-r-4 border-teal-500 p-4 rounded-lg mt-4 mb-4">
-            <h4 className="font-bold text-teal-800 mb-2">איך מחשבים רמת דיוק?</h4>
-            <p className="text-teal-700 mb-2">
-              הציגו למצלמה או למיקרופון את הנתונים החדשים שהמודל מעולם לא ראה. ספרו כמה פעמים הוא זיהה נכון את המחלקה מתוך סך כל הניסיונות שלכם.
-            </p>
-            <div className="bg-white p-3 rounded-md font-mono text-teal-900 border border-teal-200 inline-block mb-2">
-              (מספר הזיהויים הנכונים / סך כל הבדיקות) × 100 = % דיוק
-            </div>
-            <p className="text-teal-700 text-sm mt-2">
-              <strong>דוגמה:</strong> שמרתם בצד 20 תמונות לבדיקה. המודל זיהה נכון 16 מתוכן, וטעה ב-4. החישוב יהיה: <code>(16 / 20) * 100 = 80%</code>. המודל שלכם בדיוק של 80%!
-            </p>
-          </div>
-
-          <div className="mt-6 mb-4">
-             <p className="text-gray-700 font-bold mb-2">מה הציון שהמודל שלכם קיבל? דווחו למורה בטופס הבא:</p>
-             <div className="w-full h-80 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
-                <div className="absolute inset-0 flex items-center justify-center flex-col p-6 text-center z-10 pointer-events-none">
-                    <FileCheck className="w-12 h-12 text-teal-300 mb-3" />
-                    <p className="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס "דיווח רמת הדיוק"</p>
-                    <p className="text-sm text-gray-500 mt-2 max-w-md">
-                      החלף את ה-iframe בקישור לטופס בו התלמידים מדווחים על הדיוק (Accuracy) שחישבו ועל המחלקות בהן המודל טעה.
-                    </p>
-                </div>
-                <iframe 
-                  src="about:blank" 
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  marginHeight="0" 
-                  marginWidth="0"
-                  className="absolute inset-0 z-0 bg-transparent"
-                  title="טופס דיווח דיוק"
-                >טוען...</iframe>
-             </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "שיפור ודיוק המודל",
-      icon: <RefreshCw className="w-8 h-8 text-indigo-500" />,
-      content: (
-        <div className="space-y-4">
-          <p className="text-gray-700 text-lg">
-            מודל בדרך כלל לא יוצא מושלם בניסיון הראשון, וזה בסדר גמור! אם רמת הדיוק שלכם נמוכה מ-80% או שהמודל מציג "הזיות", עלינו לחזור לאחור ולשפר את ה-Dataset.
-          </p>
-
-          <div className="bg-red-50 border-r-4 border-red-500 p-4 rounded-lg mt-4 mb-4">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertCircle className="text-red-600 w-5 h-5" />
-              <h4 className="font-bold text-red-800">המודל טועה (הוזה)? כך נתקן:</h4>
-            </div>
-            <p className="text-red-700 mb-2">
-              אצל ולרי, המודל זיהה בטעות דף ירוק חלק כ"שטר של 20 שקלים". זוהי <strong>הזיה</strong>! ולרי תיקן זאת על ידי הוספת מחלקת "רקע/שונות" וצילם לתוכה חפצים ירוקים שאינם שטרות. 
-            </p>
-            <ul className="list-disc list-inside text-red-700 font-medium">
-              <li>הוסיפו תמונות נוספות למחלקה בה המודל נכשל.</li>
-              <li>שנו זוויות ותאורה.</li>
-              <li>הוסיפו מחלקת רקע (Background).</li>
-            </ul>
-          </div>
-
-          <p className="text-gray-700 font-bold mt-4 mb-2">לאחר שהוספתם נתונים ואימנתם מחדש, בצעו <strong>בדיקת דיוק מחודשת</strong>. האם האחוזים עלו?</p>
-
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">תעדו כאן את תהליך השיפור:</label>
-            <textarea
-              className="w-full p-4 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400"
-              rows="3"
-              placeholder="המקור הדיוק היה ___%. המודל טעה בעיקר כשהוא ראה ___ ולכן הוספתי נתונים של ___. הדיוק החדש הוא ___%."
-              value={formData.reflection}
-              onChange={(e) => handleInputChange('reflection', e.target.value)}
-            ></textarea>
-          </div>
-
-          <div className="mt-6 mb-4">
-             <div className="flex items-center gap-2 mb-2">
-               <UploadCloud className="text-gray-700 w-6 h-6" />
-               <p className="text-gray-700 font-bold">הגעתם לדיוק מספק? הגישו את המודל הסופי:</p>
-             </div>
-             <div className="w-full h-40 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
-                <div className="absolute inset-0 flex items-center justify-center flex-col p-4 text-center z-10 pointer-events-none">
-                    <p className="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס "הגשת המודל המוכן"</p>
-                    <p className="text-sm text-gray-500 mt-1 max-w-md">
-                      טופס להגשת הקישור (Export Model Link) של Teachable Machine לאחר השיפורים.
-                    </p>
-                </div>
-                <iframe 
-                  src="about:blank" 
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  marginHeight="0" 
-                  marginWidth="0"
-                  className="absolute inset-0 z-0 bg-transparent"
-                  title="טופס הגשת המודל"
-                >טוען...</iframe>
-             </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "חיבור לפייתון",
-      icon: <Code className="w-8 h-8 text-blue-500" />,
-      content: (
-        <div className="space-y-4">
-          <p className="text-gray-700 text-lg">
-            המודל עובד היטב? מעולה! עכשיו נחבר אותו לתכנית פייתון שתעשה משהו אמיתי עם התוצאה.
-          </p>
-          <div className="bg-gray-800 text-gray-100 p-4 rounded-xl text-left font-mono text-sm leading-relaxed" dir="ltr">
-            <span className="text-gray-400"># דוגמה לקוד (הקוד של ולרי)</span><br/>
-            <span className="text-purple-400">import</span> cv2<br/>
-            <span className="text-purple-400">from</span> keras.models <span className="text-purple-400">import</span> load_model<br/>
-            <span className="text-purple-400">import</span> pyttsx3 <span className="text-gray-400"># ספריה להקראת קול</span><br/><br/>
-            <span className="text-gray-400"># טעינת המודל מ-Teachable Machine</span><br/>
-            model = load_model(<span className="text-green-400">"keras_model.h5"</span>)<br/>
-            engine = pyttsx3.init() <span className="text-gray-400"># הפעלת מנוע הקול</span><br/><br/>
-            <span className="text-gray-400"># הוסף כאן את לולאת המצלמה שלך והתנאים</span><br/>
-            <span className="text-blue-300">if</span> prediction == <span className="text-green-400">"50_NIS"</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-green-400">"זהו שטר של 50 שקלים"</span>)<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;engine.say(<span className="text-green-400">"חמישים שקלים"</span>)<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;engine.runAndWait()
-          </div>
-          <div>
-             <label className="block text-gray-700 font-bold mb-2">מה התכנית שלכם אמורה לעשות בהינתן כל זיהוי?</label>
-             <textarea
-              className="w-full p-4 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400"
-              rows="3"
-              placeholder="למשל: אם המערכת מזהה שטר של 50 שקלים, היא תשמיע קובץ קול שאומר 'חמישים שקלים'..."
-              value={formData.pythonNotes}
-              onChange={(e) => handleInputChange('pythonNotes', e.target.value)}
-            ></textarea>
-          </div>
-          <div className="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3">
-            <HelpCircle className="w-6 h-6 text-blue-500 flex-shrink-0 mt-1" />
-            <div>
-              <h4 className="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
-              <p className="text-blue-700">איך הקוד שלנו בעצם "קורא" את המודל? במקום שהמודל רק יגיד מה הוא רואה, איך נגרום לתכנית שלנו *להגיב* לזה בצורה חכמה?</p>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "הגשת הפרויקט",
-      icon: <FileCheck className="w-8 h-8 text-green-500" />,
-      content: (
-        <div className="space-y-6 text-center">
-          <Smile className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold text-gray-800">כל הכבוד! הגעתם לקו הסיום!</h3>
-          <p className="text-gray-700 text-lg">
-            עברתם תהליך שלם: מרעיון, למודל AI, התמודדות עם תסכולים ושיפורים, ועד לקוד פייתון אמיתי.
-          </p>
-          
-          <div className="bg-white border-2 border-dashed border-gray-300 p-6 rounded-xl mt-6">
-            <h4 className="font-bold text-gray-800 mb-4 text-xl">מסמכי הגשה (תבנית הפרויקט של גיא)</h4>
-            <p className="text-gray-600 mb-4">
-              כאן עליכם להטמיע ולמלא את מסמך סיכום הפרויקט שלכם, הכולל את הרקע, תיאור הבעיה, תיעוד אימון המודל וצילומי מסך של הקוד.
-            </p>
-            <button className="bg-indigo-600 text-white px-6 py-3 rounded-full font-bold hover:bg-indigo-700 transition shadow-lg">
-              פתח תבנית מסמך הגשה (Google Docs)
-            </button>
-          </div>
-        </div>
-      )
-    }
-  ];
-
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) setCurrentStep(prev => prev + 1);
-  };
-
-  const handlePrev = () => {
-    if (currentStep > 0) setCurrentStep(prev => prev - 1);
-  };
-
-  const progressPercentage = ((currentStep) / (steps.length - 1)) * 100;
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 font-sans" dir="rtl">
-      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden">
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פרויקט מדעני הבינה המלאכותית</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;800&display=swap');
+        body { font-family: 'Heebo', sans-serif; }
         
-        {/* Header */}
-        <div className="bg-gradient-to-l from-blue-700 to-indigo-600 p-8 text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 opacity-10">
-            <Brain className="w-48 h-48 -mt-10 -mr-10" />
-          </div>
-          <div className="relative z-10 flex items-center gap-4">
-            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
-              <Code className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-extrabold tracking-tight">פרויקט מדעני ה-AI</h1>
-              <p className="text-blue-100 mt-1">מדעי המחשב בשילוב בינה מלאכותית - כיתה ט'</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="px-8 pt-8">
-          <div className="flex justify-between mb-2">
-            <span className="text-sm font-bold text-gray-600">התקדמות: {Math.round(progressPercentage)}%</span>
-            <span className="text-sm font-bold text-gray-600">שלב {currentStep + 1} מתוך {steps.length}</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-3 mb-8 overflow-hidden">
-            <div 
-              className="bg-indigo-600 h-3 rounded-full transition-all duration-500 ease-in-out" 
-              style={{ width: `${progressPercentage}%` }}
-            ></div>
-          </div>
-        </div>
-
-        {/* Main Content Area */}
-        <div className="px-8 pb-8">
-          <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
-            <div className="bg-gray-50 p-3 rounded-full shadow-inner">
-              {steps[currentStep].icon}
-            </div>
-            <h2 className="text-2xl font-bold text-gray-800">{steps[currentStep].title}</h2>
-          </div>
-          
-          <div className="min-h-[300px] animate-fadeIn">
-            {steps[currentStep].content}
-          </div>
-
-          {/* Navigation Buttons */}
-          <div className="flex justify-between items-center mt-10 pt-6 border-t border-gray-100">
-            <button
-              onClick={handlePrev}
-              disabled={currentStep === 0}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all ${
-                currentStep === 0 
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 shadow-sm'
-              }`}
-            >
-              <ChevronRight className="w-5 h-5" />
-              אחורה
-            </button>
-            
-            <button
-              onClick={handleNext}
-              disabled={currentStep === steps.length - 1}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold transition-all shadow-md ${
-                currentStep === steps.length - 1
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg'
-              }`}
-            >
-              המשך לשלב הבא
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      <style dangerouslySetInnerHTML={{__html: `
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeIn {
-          animation: fadeIn 0.4s ease-out forwards;
+            animation: fadeIn 0.4s ease-out forwards;
         }
-      `}} />
-    </div>
-  );
-};
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
 
-export default AiProjectMentor;
+    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-l from-blue-700 to-indigo-600 p-8 text-white relative overflow-hidden">
+            <div class="absolute top-0 right-0 opacity-10">
+                <i data-lucide="brain" class="w-48 h-48 -mt-10 -mr-10"></i>
+            </div>
+            <div class="relative z-10 flex items-center gap-4">
+                <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
+                    <i data-lucide="code" class="w-8 h-8 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-extrabold tracking-tight">פרויקט מדעני ה-AI</h1>
+                    <p class="text-blue-100 mt-1">מדעי המחשב בשילוב בינה מלאכותית - כיתה ט'</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="px-8 pt-8">
+            <div class="flex justify-between mb-2">
+                <span id="progress-text" class="text-sm font-bold text-gray-600">התקדמות: 0%</span>
+                <span id="step-counter" class="text-sm font-bold text-gray-600">שלב 1 מתוך 8</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3 mb-8 overflow-hidden">
+                <div id="progress-bar" class="bg-indigo-600 h-3 rounded-full transition-all duration-500 ease-in-out" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="px-8 pb-8">
+            <div class="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
+                <div id="step-icon-container" class="bg-gray-50 p-3 rounded-full shadow-inner">
+                    <!-- Icon injected by JS -->
+                </div>
+                <h2 id="step-title" class="text-2xl font-bold text-gray-800">כותרת השלב</h2>
+            </div>
+            
+            <div id="step-content" class="min-h-[300px]">
+                <!-- Content injected by JS -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between items-center mt-10 pt-6 border-t border-gray-100">
+                <button id="btn-prev" class="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all bg-gray-100 text-gray-400 cursor-not-allowed" disabled>
+                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    אחורה
+                </button>
+                
+                <button id="btn-next" class="flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold transition-all shadow-md bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg">
+                    המשך לשלב הבא
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentStep = 0;
+
+        // Data definition
+        const steps = [
+            {
+                title: "שלב החלומות",
+                icon: 'lightbulb',
+                iconClass: 'text-yellow-500',
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-gray-700 text-lg">
+                            ברוכים הבאים לפרויקט הגמר! השלב הראשון הוא פשוט לחלום. 
+                            חשבו על רעיונות לבעיות שניתן לפתור בעזרת בינה מלאכותית. אל תפחדו להציע גם "חלומות" גדולים!
+                        </p>
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                            <h4 class="font-bold text-gray-800 mb-3 text-lg">נקודות חשובות לחשיבה על רעיון (מתוך המקורות):</h4>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-right border-collapse">
+                                    <thead>
+                                        <tr class="bg-indigo-50">
+                                            <th class="border border-gray-200 p-2 font-bold text-indigo-900 w-1/4">קריטריון</th>
+                                            <th class="border border-gray-200 p-2 font-bold text-indigo-900 w-3/4">למה חשוב לשים לב?</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border border-gray-200 p-2 font-semibold text-gray-800 bg-gray-50">סוג הנתונים</td>
+                                            <td class="border border-gray-200 p-2 text-gray-700">האם ניתן לזהות את הבעיה בעזרת <strong>תמונה</strong>, <strong>קול</strong> או <strong>תנוחה</strong>? (אלו היכולות שניתן לממש ב-Teachable Machine).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-200 p-2 font-semibold text-gray-800 bg-gray-50">זמינות הנתונים (Data)</td>
+                                            <td class="border border-gray-200 p-2 text-gray-700">האם נוכל לאסוף או לצלם בעצמנו מספיק דוגמאות (לפחות 50-100 לכל מצב) כדי לאמן את המודל בהצלחה?</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-200 p-2 font-semibold text-gray-800 bg-gray-50">מענה לבעיה</td>
+                                            <td class="border border-gray-200 p-2 text-gray-700">האם הרעיון שלנו פותר בעיה ספציפית ועוזר למישהו? (למשל: שומר על הסביבה, מסייע לבעלי מוגבלויות, מונע סכנה).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-200 p-2 font-semibold text-gray-800 bg-gray-50">היתכנות ומגוון</td>
+                                            <td class="border border-gray-200 p-2 text-gray-700">האם הבעיה ממוקדת מספיק שנוכל ללמד מחשב להבחין בה בתנאים מציאותיים (תאורה שונה, רקעים שונים, משתמשים שונים)?</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <p class="text-gray-700 font-bold mb-2">יש לכם רעיונות? מלאו את הטופס הבא כדי שהמורה יוכל לראות ולשמור אותם:</p>
+                            <div class="w-full h-[450px] bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
+                                <div class="absolute inset-0 flex items-center justify-center flex-col p-6 text-center z-10 pointer-events-none">
+                                    <i data-lucide="file-check" class="w-12 h-12 text-indigo-300 mb-3"></i>
+                                    <p class="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס ה-Google Forms שלך</p>
+                                    <p class="text-sm text-gray-500 mt-2 max-w-md">
+                                        כדי לאסוף את רעיונות התלמידים ל-Drive שלך, החלף את ה-iframe בקוד בשורת ההטמעה (Embed) של הטופס שיצרת.
+                                    </p>
+                                    <div class="mt-6 text-sm text-right text-gray-600 bg-white/90 p-4 rounded-lg border border-indigo-100 shadow-sm w-full max-w-lg pointer-events-auto">
+                                        <p class="font-bold text-indigo-800 mb-2">📌 נתונים מומלצים לאיסוף בטופס זה:</p>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>שם התלמיד וכיתה</li>
+                                            <li>3 רעיונות שונים לפרויקט (מה המערכת מזהה)</li>
+                                            <li>עבור כל רעיון: איזו בעיה ספציפית הוא פותר?</li>
+                                            <li>סוג הקלט הנדרש (תמונות, קול, או תנוחות גוף)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <iframe 
+                                    src="about:blank" 
+                                    width="100%" 
+                                    height="100%" 
+                                    frameborder="0" 
+                                    marginheight="0" 
+                                    marginwidth="0"
+                                    class="absolute inset-0 z-0 bg-transparent"
+                                    title="טופס הגשת רעיונות"
+                                >טוען...</iframe>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3 mt-6">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-blue-500 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
+                                <p class="text-blue-700">מהו הדבר שהכי מפריע לך ביומיום? איזו בעיה קטנה היית שמח שמישהו (או משהו) יפתור עבורך?</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "בחירה ודיוק",
+                icon: 'target',
+                iconClass: 'text-red-500',
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-gray-700 text-lg">
+                            מתוך כל החלומות, בואו נבחר אחד שנוכל ליישם בעזרת בינה מלאכותית (סיווג תמונות, קול או תנוחה).
+                        </p>
+                        
+                        <div class="bg-green-50 border-r-4 border-green-500 p-4 rounded-lg mt-4">
+                            <h4 class="font-bold text-green-800 mb-2">הדוגמה של ולרי:</h4>
+                            <p class="text-green-700">ולרי בחר להתמקד בבעיה של אנשים עיוורים שמתקשים לזהות שטרות. הוא שם לב שהשטרות דומים מאוד במגע, ולכן המטרה שלו הייתה לפתח מערכת שתזהה את השטר באמצעות מצלמה ותקריא את הסכום בקול. בעיה ממוקדת שניתנת לפתרון על ידי זיהוי תמונות!</p>
+                        </div>
+
+                        <div class="mt-6 mb-4">
+                            <p class="text-gray-700 font-bold mb-2">סגורים על הרעיון והבעיה שאתם רוצים לפתור? מלאו את הטופס הבא כדי לאשר אותם מול המורה:</p>
+                            <div class="w-full h-[450px] bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
+                                <div class="absolute inset-0 flex items-center justify-center flex-col p-6 text-center z-10 pointer-events-none">
+                                    <i data-lucide="file-check" class="w-12 h-12 text-indigo-300 mb-3"></i>
+                                    <p class="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס "הגדרת הבעיה"</p>
+                                    <p class="text-sm text-gray-500 mt-2 max-w-md">
+                                        כדי לאשר את הרעיונות של התלמידים לפני המעבר לשלב הבא, החלף את ה-iframe בקוד בשורת ההטמעה של הטופס שיצרת.
+                                    </p>
+                                    <div class="mt-6 text-sm text-right text-gray-600 bg-white/90 p-4 rounded-lg border border-indigo-100 shadow-sm w-full max-w-lg pointer-events-auto">
+                                        <p class="font-bold text-indigo-800 mb-2">📌 נתונים מומלצים לאיסוף בטופס זה:</p>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>שם התלמיד וכיתה</li>
+                                            <li>הרעיון הסופי שנבחר לפרויקט</li>
+                                            <li>תיאור מפורט של הבעיה - איזו בעיה ספציפית הרעיון פותר?</li>
+                                            <li>קהל היעד שישתמש במערכת</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <iframe 
+                                    src="about:blank" 
+                                    width="100%" 
+                                    height="100%" 
+                                    frameborder="0" 
+                                    marginheight="0" 
+                                    marginwidth="0"
+                                    class="absolute inset-0 z-0 bg-transparent"
+                                    title="טופס הגדרת הבעיה"
+                                >טוען...</iframe>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-blue-500 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
+                                <p class="text-blue-700">מי בדיוק הולך להשתמש במערכת שלך? איך המערכת "תראה" או "תשמע" את הבעיה כדי לפתור אותה?</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "איסוף נתונים ומניעת הטיות",
+                icon: 'database',
+                iconClass: 'text-orange-500',
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-gray-700 text-lg">
+                            כדי שהמודל שלנו יהיה חכם, הוא צריך ללמוד מהרבה דוגמאות. אוסף הדוגמאות הזה נקרא <strong>Dataset</strong> (מאגר נתונים). בחירה לא נכונה של נתונים יכולה "לקלקל" את הבינה המלאכותית!
+                        </p>
+
+                        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg mt-4 mb-4">
+                            <h4 class="font-bold text-blue-800 mb-2">💡 חוק ברזל: פיצול נתונים (80/20)</h4>
+                            <p class="text-blue-700">
+                                אל תשתמשו בכל הנתונים שלכם כדי לאמן את המודל! עליכם <strong>לשמור 20% מהתמונות או ההקלטות בצד</strong> (בתיקייה נפרדת או פשוט לא להעלות אותם עדיין). אלו יהיו "נתוני הבדיקה" שלנו מאוחר יותר, שיוכיחו שהמודל לא סתם "שינן" בעל פה את התשובות, אלא באמת למד לזהות תבניות חדשות.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-orange-50 border-r-4 border-orange-500 p-4 rounded-lg mt-4 mb-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="alert-circle" class="text-orange-600 w-5 h-5"></i>
+                                <h4 class="font-bold text-orange-800">זהירות, הטיות (Bias)!</h4>
+                            </div>
+                            <p class="text-orange-700 mb-2">
+                                אם נלמד את המחשב לזהות שטר של 50 שקלים רק כשהוא <strong>חדש, חלק ומצולם באור יום</strong>, מה יקרה כשעיוור ינסה לזהות שטר <strong>מקומט בתוך חדר חשוך</strong>? המודל יטעה! 
+                                הטיה קורית כשהנתונים שלנו לא מייצגים את כל המציאות. עלינו לגוון ולכלול מצבים שונים כדי שהמודל יתאים לכולם.
+                            </p>
+                        </div>
+
+                        <div class="mt-6 mb-4">
+                            <p class="text-gray-700 font-bold mb-2">איך תדאגו שה-Dataset שלכם יהיה מגוון וללא הטיות? מלאו את התכנון שלכם בטופס הבא:</p>
+                            <div class="w-full h-[450px] bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
+                                <div class="absolute inset-0 flex items-center justify-center flex-col p-6 text-center z-10 pointer-events-none">
+                                    <i data-lucide="file-check" class="w-12 h-12 text-indigo-300 mb-3"></i>
+                                    <p class="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס "תכנון ה-Dataset"</p>
+                                    <p class="text-sm text-gray-500 mt-2 max-w-md">
+                                        החלף את ה-iframe בקישור לטופס שבו התלמידים מפרטים אילו תמונות הם הולכים לאסוף ומדוע.
+                                    </p>
+                                    <div class="mt-6 text-sm text-right text-gray-600 bg-white/90 p-4 rounded-lg border border-indigo-100 shadow-sm w-full max-w-lg pointer-events-auto">
+                                        <p class="font-bold text-indigo-800 mb-2">📌 נתונים מומלצים לאיסוף בטופס זה:</p>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>שם התלמיד וכיתה</li>
+                                            <li>שמות המחלקות (Classes) שייווצרו במודל</li>
+                                            <li>כמות נתונים משוערת לכל מחלקה</li>
+                                            <li>תכנון מניעת הטיות: איך תדאגו לגוון את הנתונים? (תאורה, רקעים וכו')</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <iframe 
+                                    src="about:blank" 
+                                    width="100%" 
+                                    height="100%" 
+                                    frameborder="0" 
+                                    marginheight="0" 
+                                    marginwidth="0"
+                                    class="absolute inset-0 z-0 bg-transparent"
+                                    title="טופס תכנון הנתונים"
+                                >טוען...</iframe>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-blue-500 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
+                                <p class="text-blue-700">תארו לעצמכם מישהו אחר (בגיל אחר, עם צבע עור שונה, או בסביבה שונה) שמשתמש במערכת. האם הנתונים שאספתם יעבדו גם עבורו?</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "אימון מודל AI",
+                icon: 'brain',
+                iconClass: 'text-purple-500',
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-gray-700 text-lg">
+                            עכשיו עוברים לפרקטיקה! נשתמש ב- <strong>Teachable Machine</strong> של Google כדי ללמד את המחשב לזהות את מה שאנחנו צריכים.
+                        </p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+                            <li>פתחו מחלקה (Class) עבור כל מצב (למשל: שטר 20, שטר 50, שטר 100, "רקע/ידיים ריקות").</li>
+                            <li>העלו את <strong>80%</strong> מהתמונות/הקלטות שאספתם לכל מחלקה (זכרו את 20% ששמרנו לבדיקה בצד!).</li>
+                            <li>אמנו את המודל (Train).</li>
+                        </ul>
+                        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3 mt-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-blue-500 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
+                                <p class="text-blue-700">בזמן שהמודל מתאמן, מה בעצם קורה שם מאחורי הקלעים? איך לדעתכם המחשב לומד להבדיל בין התמונות?</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "בדיקת המודל (חישוב דיוק)",
+                icon: 'calculator',
+                iconClass: 'text-teal-500',
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-gray-700 text-lg">
+                            הגיע רגע האמת! האם המודל שלכם באמת חכם או שהוא רק עושה כאילו? עכשיו נשתמש ב-20% הנתונים ששמרנו בצד כדי למדוד את ה<strong>דיוק (Accuracy)</strong> שלו.
+                        </p>
+                        
+                        <div class="bg-teal-50 border-r-4 border-teal-500 p-4 rounded-lg mt-4 mb-4">
+                            <h4 class="font-bold text-teal-800 mb-2">איך מחשבים רמת דיוק?</h4>
+                            <p class="text-teal-700 mb-2">
+                                הציגו למצלמה או למיקרופון את הנתונים החדשים שהמודל מעולם לא ראה. ספרו כמה פעמים הוא זיהה נכון את המחלקה מתוך סך כל הניסיונות שלכם.
+                            </p>
+                            <div class="bg-white p-3 rounded-md font-mono text-teal-900 border border-teal-200 inline-block mb-2" dir="ltr">
+                                (Correct Guesses / Total Tests) &times; 100 = % Accuracy
+                            </div>
+                            <p class="text-teal-700 text-sm mt-2">
+                                <strong>דוגמה:</strong> שמרתם בצד 20 תמונות לבדיקה. המודל זיהה נכון 16 מתוכן, וטעה ב-4. החישוב יהיה: <code>(16 / 20) * 100 = 80%</code>. המודל שלכם בדיוק של 80%!
+                            </p>
+                        </div>
+
+                        <div class="mt-6 mb-4">
+                            <p class="text-gray-700 font-bold mb-2">מה הציון שהמודל שלכם קיבל? דווחו למורה בטופס הבא:</p>
+                            <div class="w-full h-[450px] bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
+                                <div class="absolute inset-0 flex items-center justify-center flex-col p-6 text-center z-10 pointer-events-none">
+                                    <i data-lucide="file-check" class="w-12 h-12 text-teal-300 mb-3"></i>
+                                    <p class="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס "דיווח רמת הדיוק"</p>
+                                    <p class="text-sm text-gray-500 mt-2 max-w-md">
+                                        החלף את ה-iframe בקישור לטופס בו התלמידים מדווחים על הדיוק (Accuracy) שחישבו ועל המחלקות בהן המודל טעה.
+                                    </p>
+                                    <div class="mt-6 text-sm text-right text-gray-600 bg-white/90 p-4 rounded-lg border border-teal-100 shadow-sm w-full max-w-lg pointer-events-auto">
+                                        <p class="font-bold text-teal-800 mb-2">📌 נתונים מומלצים לאיסוף בטופס זה:</p>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>שם התלמיד וכיתה</li>
+                                            <li>אחוז הדיוק (Accuracy) המחושב שהתקבל בבדיקה</li>
+                                            <li>פירוט טעויות: באילו מצבים או מחלקות המודל טעה/הזה?</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <iframe 
+                                    src="about:blank" 
+                                    width="100%" 
+                                    height="100%" 
+                                    frameborder="0" 
+                                    marginheight="0" 
+                                    marginwidth="0"
+                                    class="absolute inset-0 z-0 bg-transparent"
+                                    title="טופס דיווח דיוק"
+                                >טוען...</iframe>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "שיפור ודיוק המודל",
+                icon: 'refresh-cw',
+                iconClass: 'text-indigo-500',
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-gray-700 text-lg">
+                            מודל בדרך כלל לא יוצא מושלם בניסיון הראשון, וזה בסדר גמור! אם רמת הדיוק שלכם נמוכה מ-80% או שהמודל מציג "הזיות", עלינו לחזור לאחור ולשפר את ה-Dataset.
+                        </p>
+
+                        <div class="bg-red-50 border-r-4 border-red-500 p-4 rounded-lg mt-4 mb-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="alert-circle" class="text-red-600 w-5 h-5"></i>
+                                <h4 class="font-bold text-red-800">המודל טועה (הוזה)? כך נתקן:</h4>
+                            </div>
+                            <p class="text-red-700 mb-2">
+                                אצל ולרי, המודל זיהה בטעות דף ירוק חלק כ"שטר של 20 שקלים". זוהי <strong>הזיה</strong>! ולרי תיקן זאת על ידי הוספת מחלקת "רקע/שונות" וצילם לתוכה חפצים ירוקים שאינם שטרות. 
+                            </p>
+                            <ul class="list-disc list-inside text-red-700 font-medium">
+                                <li>הוסיפו תמונות נוספות למחלקה בה המודל נכשל.</li>
+                                <li>שנו זוויות ותאורה.</li>
+                                <li>הוסיפו מחלקת רקע (Background).</li>
+                            </ul>
+                        </div>
+
+                        <p class="text-gray-700 font-bold mt-4 mb-2">לאחר שהוספתם נתונים ואימנתם מחדש, בצעו <strong>בדיקת דיוק מחודשת</strong>. האם האחוזים עלו?</p>
+
+                        <div class="mt-6 mb-4">
+                            <p class="text-gray-700 font-bold mb-2">תעדו את תהליך השיפור והגישו את המודל הסופי בטופס הבא:</p>
+                            <div class="w-full h-[450px] bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
+                                <div class="absolute inset-0 flex items-center justify-center flex-col p-4 text-center z-10 pointer-events-none">
+                                    <i data-lucide="upload-cloud" class="w-12 h-12 text-gray-400 mb-3"></i>
+                                    <p class="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס "הגשת המודל המוכן"</p>
+                                    <p class="text-sm text-gray-500 mt-1 max-w-md">
+                                        טופס להגשת הקישור ורפלקציה על התיקונים.
+                                    </p>
+                                    <div class="mt-6 text-sm text-right text-gray-600 bg-white/90 p-4 rounded-lg border border-gray-200 shadow-sm w-full max-w-lg pointer-events-auto">
+                                        <p class="font-bold text-gray-800 mb-2">📌 נתונים מומלצים לאיסוף בטופס זה:</p>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>שם התלמיד וכיתה</li>
+                                            <li>תיעוד תהליך השיפור (מה עשיתם כדי לשפר את המודל?)</li>
+                                            <li>אחוז הדיוק הסופי (לאחר השיפורים)</li>
+                                            <li>קישור ציבורי להורדת המודל (Export Model Link)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <iframe 
+                                    src="about:blank" 
+                                    width="100%" 
+                                    height="100%" 
+                                    frameborder="0" 
+                                    marginheight="0" 
+                                    marginwidth="0"
+                                    class="absolute inset-0 z-0 bg-transparent"
+                                    title="טופס הגשת המודל"
+                                >טוען...</iframe>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "חיבור לפייתון",
+                icon: 'code',
+                iconClass: 'text-blue-500',
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-gray-700 text-lg">
+                            המודל עובד היטב? מעולה! עכשיו נחבר אותו לתכנית פייתון שתעשה משהו אמיתי עם התוצאה.
+                        </p>
+                        <div class="bg-gray-800 text-gray-100 p-4 rounded-xl text-left font-mono text-sm leading-relaxed" dir="ltr">
+                            <span class="text-gray-400"># דוגמה לקוד (הקוד של ולרי)</span><br/>
+                            <span class="text-purple-400">import</span> cv2<br/>
+                            <span class="text-purple-400">from</span> keras.models <span class="text-purple-400">import</span> load_model<br/>
+                            <span class="text-purple-400">import</span> pyttsx3 <span class="text-gray-400"># ספריה להקראת קול</span><br/><br/>
+                            <span class="text-gray-400"># טעינת המודל מ-Teachable Machine</span><br/>
+                            model = load_model(<span class="text-green-400">"keras_model.h5"</span>)<br/>
+                            engine = pyttsx3.init() <span class="text-gray-400"># הפעלת מנוע הקול</span><br/><br/>
+                            <span class="text-gray-400"># הוסף כאן את לולאת המצלמה שלך והתנאים</span><br/>
+                            <span class="text-blue-300">if</span> prediction == <span class="text-green-400">"50_NIS"</span>:<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;print(<span class="text-green-400">"זהו שטר של 50 שקלים"</span>)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;engine.say(<span class="text-green-400">"חמישים שקלים"</span>)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;engine.runAndWait()
+                        </div>
+                        
+                        <div class="mt-6 mb-4">
+                            <p class="text-gray-700 font-bold mb-2">מה התכנית שלכם אמורה לעשות בהינתן כל זיהוי? תכננו זאת בטופס הבא:</p>
+                            <div class="w-full h-[450px] bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl relative overflow-hidden group">
+                                <div class="absolute inset-0 flex items-center justify-center flex-col p-6 text-center z-10 pointer-events-none">
+                                    <i data-lucide="file-check" class="w-12 h-12 text-blue-300 mb-3"></i>
+                                    <p class="text-gray-600 font-bold text-lg">מורה יקר, כאן יוטמע טופס "תכנון קוד הפייתון"</p>
+                                    <p class="text-sm text-gray-500 mt-2 max-w-md">
+                                        החלף את ה-iframe בקישור לטופס בו התלמידים מסבירים את הלוגיקה של התכנית שלהם.
+                                    </p>
+                                    <div class="mt-6 text-sm text-right text-gray-600 bg-white/90 p-4 rounded-lg border border-blue-100 shadow-sm w-full max-w-lg pointer-events-auto">
+                                        <p class="font-bold text-blue-800 mb-2">📌 נתונים מומלצים לאיסוף בטופס זה:</p>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>שם התלמיד וכיתה</li>
+                                            <li>תיאור לוגי: מה התכנית תעשה בכל זיהוי? (למשל: תשמיע קול, תדפיס הודעה)</li>
+                                            <li>אילו ספריות פייתון נוספות יידרשו?</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <iframe 
+                                    src="about:blank" 
+                                    width="100%" 
+                                    height="100%" 
+                                    frameborder="0" 
+                                    marginheight="0" 
+                                    marginwidth="0"
+                                    class="absolute inset-0 z-0 bg-transparent"
+                                    title="טופס תכנון פייתון"
+                                >טוען...</iframe>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-lg flex items-start gap-3 mt-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-blue-500 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-blue-800">המנטור הסוקראטי שואל:</h4>
+                                <p class="text-blue-700">איך הקוד שלנו בעצם "קורא" את המודל? במקום שהמודל רק יגיד מה הוא רואה, איך נגרום לתכנית שלנו *להגיב* לזה בצורה חכמה?</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "הגשת הפרויקט",
+                icon: 'file-check',
+                iconClass: 'text-green-500',
+                content: `
+                    <div class="space-y-6 text-center">
+                        <i data-lucide="smile" class="w-16 h-16 text-green-500 mx-auto mb-4"></i>
+                        <h3 class="text-2xl font-bold text-gray-800">כל הכבוד! הגעתם לקו הסיום!</h3>
+                        <p class="text-gray-700 text-lg">
+                            עברתם תהליך שלם: מרעיון, למודל AI, התמודדות עם תסכולים ושיפורים, ועד לקוד פייתון אמיתי.
+                        </p>
+                        
+                        <div class="bg-white border-2 border-dashed border-gray-300 p-6 rounded-xl mt-6">
+                            <h4 class="font-bold text-gray-800 mb-4 text-xl">מסמכי הגשה (תבנית הפרויקט של גיא)</h4>
+                            <p class="text-gray-600 mb-4">
+                                כאן עליכם להטמיע ולמלא את מסמך סיכום הפרויקט שלכם, הכולל את הרקע, תיאור הבעיה, תיעוד אימון המודל וצילומי מסך של הקוד.
+                            </p>
+                            <button class="bg-indigo-600 text-white px-6 py-3 rounded-full font-bold hover:bg-indigo-700 transition shadow-lg">
+                                פתח תבנית מסמך הגשה (Google Docs)
+                            </button>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        // Functions
+        function renderStep() {
+            const step = steps[currentStep];
+            
+            // Re-trigger animation
+            const contentContainer = document.getElementById('step-content');
+            contentContainer.classList.remove('animate-fadeIn');
+            void contentContainer.offsetWidth; // Trigger reflow
+            contentContainer.classList.add('animate-fadeIn');
+
+            // Update Header
+            document.getElementById('step-title').textContent = step.title;
+            document.getElementById('step-icon-container').innerHTML = `<i data-lucide="${step.icon}" class="w-8 h-8 ${step.iconClass}"></i>`;
+            
+            // Update Content
+            contentContainer.innerHTML = step.content;
+
+            // Update Progress
+            const progressPercentage = (currentStep / (steps.length - 1)) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
+            document.getElementById('progress-text').textContent = `התקדמות: ${Math.round(progressPercentage)}%`;
+            document.getElementById('step-counter').textContent = `שלב ${currentStep + 1} מתוך ${steps.length}`;
+
+            // Update Buttons
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+
+            if (currentStep === 0) {
+                btnPrev.disabled = true;
+                btnPrev.className = "flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all bg-gray-100 text-gray-400 cursor-not-allowed";
+            } else {
+                btnPrev.disabled = false;
+                btnPrev.className = "flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 shadow-sm";
+            }
+
+            if (currentStep === steps.length - 1) {
+                btnNext.disabled = true;
+                btnNext.className = "flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold transition-all shadow-md bg-gray-100 text-gray-400 cursor-not-allowed";
+            } else {
+                btnNext.disabled = false;
+                btnNext.className = "flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold transition-all shadow-md bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg";
+            }
+
+            // Re-initialize Lucide icons for newly injected HTML
+            lucide.createIcons();
+        }
+
+        // Event Listeners
+        document.getElementById('btn-next').addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                renderStep();
+            }
+        });
+
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+            }
+        });
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderStep();
+        });
+
+    </script>
+</body>
+</html>
